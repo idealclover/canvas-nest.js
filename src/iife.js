@@ -10,10 +10,10 @@ const getScriptConfig = () => {
   const len = scripts.length;
   const script = scripts[len - 1]; // 当前加载的script
   return {
-    zIndex: script.getAttribute('zIndex'),
-    opacity: script.getAttribute('opacity'),
-    color: script.getAttribute('color'),
-    pointColor: script.getAttribute('pointColor'),
+    zIndex: script.getAttribute('zIndex') || -1,
+    opacity: script.getAttribute('opacity') || 0.5,
+    color: script.getAttribute('color') || '0,0,0',
+    pointColor: script.getAttribute('pointColor') || '0,0,0',
     count: Number(script.getAttribute('count')) || 99,
   };
 };
