@@ -23,4 +23,4 @@ export const range = n =>
   new Array(n).fill(0).map((e, idx) => idx);
 
 export const canvasStyle = config =>
-  `display:block;position:absolute;top:0;left:0;height:100%;width:100%;overflow:hidden;pointer-events:none;z-index:${config.zIndex};opacity:${config.opacity}`;
+  `display:block;position:fixed;top:0;left:0;overflow:hidden;pointer-events:none;z-index:${config.zIndex};opacity:${config.opacity}`;
