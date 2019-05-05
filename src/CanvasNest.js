@@ -3,7 +3,7 @@
  * Contract: i@hust.cc
  */
 
-import { bind, clear } from 'size-sensor';
+// import { bind, clear } from 'size-sensor';
 import { requestAnimationFrame, cancelAnimationFrame, range, canvasStyle } from './utils';
 
 export default class CanvasNest {
@@ -12,7 +12,7 @@ export default class CanvasNest {
 
   constructor(el, config) {
     this.el = el;
-
+    console.log(config);
     this.c = {
       zIndex: -1,           // z-index
       opacity: 0.5,         // opacity
@@ -39,28 +39,35 @@ export default class CanvasNest {
   }
 
   bindEvent() {
-    bind(this.el, () => {
-      this.canvas.width = this.el.clientWidth;
-      this.canvas.height = this.el.clientHeight;
-    });
+    // bind(this.el, () => {
+    //   this.canvas.width = this.el.clientWidth;
+    //   this.canvas.height = this.el.clientHeight;
+    //   // this.canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    //   // this.canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    // });
+    this.canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     this.onmousemove = window.onmousemove;
     window.onmousemove = e => {
-      this.current.x = e.clientX - this.el.offsetLeft + document.scrollingElement.scrollLeft; // 当存在横向滚动条时，x坐标再往右移动滚动条拉动的距离
-      this.current.y = e.clientY - this.el.offsetTop + document.scrollingElement.scrollTop; // 当存在纵向滚动条时，y坐标再往下移动滚动条拉动的距离
+      // this.current.x = e.clientX - this.el.offsetLeft + document.scrollingElement.scrollLeft; // 当存在横向滚动条时，x坐标再往右移动滚动条拉动的距离
+      // this.current.y = e.clientY - this.el.offsetTop + document.scrollingElement.scrollTop; // 当存在纵向滚动条时，y坐标再往下移动滚动条拉动的距离
+      this.current.x = e.clientX; // 当存在横向滚动条时，x坐标再往右移动滚动条拉动的距离
+      this.current.y = e.clientY; // 当存在纵向滚动条时，y坐标再往下移动滚动条拉动的距离
+
       this.onmousemove && this.onmousemove(e);
     };
 
-    this.onmouseout = window.onmouseout;
-    window.onmouseout = () => {
-      this.current.x = null;
-      this.current.y = null;
-      this.onmouseout && this.onmouseout();
-    };
+    // this.onmouseout = window.onmouseout;
+    // window.onmouseout = () => {
+    //   this.current.x = null;
+    //   this.current.y = null;
+    //   this.onmouseout && this.onmouseout();
+    // };
   }
 
   randomPoints = () => {
-    return range(this.c.count).map(() => ({
+    return range(Math.ceil(this.c.count * this.canvas.width * this.canvas.height / 400000)).map(() => ({
       x: Math.random() * this.canvas.width,
       y: Math.random() * this.canvas.height,
       xa: 2 * Math.random() - 1, // 随机运动返现
@@ -72,14 +79,17 @@ export default class CanvasNest {
   };
 
   newCanvas() {
-    if (getComputedStyle(this.el).position === 'static') {
-      this.el.style.position = 'relative'
-    }
+    // if (getComputedStyle(this.el).position === 'static') {
+    //   this.el.style.position = 'relative'
+    // }
     const canvas = document.createElement('canvas'); // 画布
+      console.log(this.c);
     canvas.style.cssText = canvasStyle(this.c);
 
-    canvas.width = this.el.clientWidth;
-    canvas.height = this.el.clientHeight;
+    // canvas.width = this.el.clientWidth;
+    // canvas.height = this.el.clientHeight;
+    canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     this.el.appendChild(canvas);
     return canvas;
@@ -145,7 +155,7 @@ export default class CanvasNest {
 
   destroy() {
     // 清除事件
-    clear(this.el);
+    // clear(this.el);
 
     // mouse 事件清除
     window.onmousemove = this.onmousemove; // 回滚方法
